@@ -134,6 +134,88 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
 
+  /api/v1/invocations:
+    get:
+      tags: [Invocations]
+      summary: List invocations across all tracked contracts
+      description: |
+        Global invocation explorer. Results are ordered newest first
+        (ledger DESC, tx_hash DESC) and paginated with an opaque cursor that
+        encodes the (ledger, tx_hash) keyset position.
+      operationId: listAllInvocations
+      security:
+        - ApiKeyAuth: [read:contracts]
+      parameters:
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/NetworkParam"
+        - name: contract_id
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Restrict results to a single contract ID.
+        - name: fn
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Function name filter.
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [SUCCESS, FAILED, NOT_FOUND]
+          description: Invocation status filter.
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+          description: Lower ledger bound (inclusive).
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+          description: Upper ledger bound (inclusive).
+        - name: since
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Lower bound on ledger_closed_at (YYYY-MM-DD or RFC3339, inclusive).
+        - name: until
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Upper bound on ledger_closed_at (YYYY-MM-DD or RFC3339, inclusive).
+      responses:
+        "200":
+          description: Page of invocations across every tracked contract
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [invocations, next_cursor]
+                properties:
+                  invocations:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Invocation"
+                  next_cursor:
+                    type: string
+        "422":
+          $ref: "#/components/responses/InvalidInput"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
   /api/v1/contracts:
     get:
       tags: [Contracts]

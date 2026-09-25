@@ -38,6 +38,8 @@ export interface EventsResponse {
 
 export interface Invocation {
   tx_hash: string;
+  contract_id: string;
+  network: string;
   ledger: number;
   ledger_closed_at: string;
   status: string;
@@ -53,8 +55,8 @@ export interface Invocation {
 
 export interface InvocationsResponse {
   invocations: Invocation[];
-  cursor: string | null;
-  has_more: boolean;
+  // The API returns `next_cursor` (empty when there are no further pages).
+  next_cursor: string | null;
 }
 
 export interface StorageEntry {

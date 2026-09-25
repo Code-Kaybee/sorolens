@@ -23,6 +23,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 Contracts
               </Link>
               <Link
+                href="/invocations"
+                className="text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)]"
+              >
+                Invocations
+              </Link>
+              <Link
                 href="/watchdog"
                 className="text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)]"
               >
